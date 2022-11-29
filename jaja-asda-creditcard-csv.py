@@ -24,13 +24,12 @@ for adate in JACCTP.find_all(['app-transactions-list']):
       transaction_title = atransaction.find("p", attrs={"data-jaja-id": "transaction-title"})
       #extract the transaction amount
       transaction_amount_tag = atransaction.find("div", attrs={"data-jaja-id": "transaction-amount"})
+      #correctly format the transaction amount string to remove £ and , and whitespace
+      transaction_amount = transaction_amount_tag.string.replace('£','').replace(',','').strip()
       #detect if this is a refund or payment transaction
-      if 'repayment' in transaction_amount_tag.get('class'):
-        #this is a refund transaction
-        transaction_amount = float(transaction_amount_tag.string.replace('£',''))
-      else:
-        #this is a payment transaction
-        transaction_amount = "-" + str(float(transaction_amount_tag.string.replace('£','')))
+      if not 'repayment' in transaction_amount_tag.get('class'):
+        #this is a payment/out/credit transaction, so add a - to the start of the string
+        transaction_amount = "-" + transaction_amount
       #write the transaction data to a list item
       transactionlist = [transaction_date, transaction_title.string, '', transaction_amount]
       #save the transaction to the overall transaction list
