@@ -1,4 +1,4 @@
-import re,  csv
+import csv
 from bs4 import BeautifulSoup
 
 #open the HTML file copied from the webpage
